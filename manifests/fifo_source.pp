@@ -1,6 +1,6 @@
-# == Define: syslogng::network_source
+# == Define: syslogng::fifo_source
 #
-# Create a syslog-ng network source (listener).
+# Create a syslog-ng fifo source (named pipe)
 #
 # === Parameters
 #
@@ -10,18 +10,11 @@
 #  configurations parent dir. Default: /etc/syslog-ng
 #
 
-define syslogng::network_source (
+define syslogng::fifo_source (
   $ensure              = present,
   $conf_dir            = '/etc/syslog-ng',
-  $source_ip           = '0.0.0.0',
-  $tcp_port            = undef,
-  $tcp_max_connections = undef,
-  $udp_port            = undef,
-  $tls_key_file_path   = undef,
-  $tls_cert_file_path  = undef,
-  $ca_dir              = undef,
-  $peer_verify         = undef,
 ) {
+
   validate_re($ensure, [ '^present', '^absent' ])
   validate_absolute_path($conf_dir)
 
@@ -32,6 +25,7 @@ define syslogng::network_source (
 
   file { "${conf_dir}/syslog-ng.conf.d/source.d/${title}.conf":
     ensure => $ensure_file,
-    content => template('syslogng/syslog-ng.conf.d/source.d/network.conf.erb'),
+    content => template('syslogng/syslog-ng.conf.d/source.d/fifo.conf.erb'),
   }
+
 }

@@ -86,13 +86,15 @@ class syslogng (
     'syslog-ng' => {},
     'puppet-agent' => {},
   },
-  $network_sources = {
-  },
+  $custom_logpaths = {},
+  $network_sources = {},
   $destinations    = {
     'messages' => {},
     'console'  => {},
     'kernel'   => {},
   },
+  $file_destinations = {},
+  $network_destinations = {},
   $chain_hostnames = false,
   $flush_lines     = 0,
   $log_fifo_size   = 1000,
@@ -209,5 +211,32 @@ class syslogng (
     $destinations,
     $default_destination
   )
+
+  create_resources(
+    syslogng::file_destination,
+    $file_destinations,
+    $default_destination
+  )
+
+  create_resources(
+    syslogng::network_destination,
+    $network_destinations,
+    $default_destination
+  )
+
+  # Not sure if this is needed -- will ignore for now and see what
+  # happens
+  
+  # create_resources(
+  #   syslogng::file_destination::syslog,
+  #   $file_destinations,
+  #   $default_destination
+  # )
+  
+  create_resources(syslogng::custom_logpath, $custom_logpaths, {
+    ensure   => $ensure,
+    conf_dir => $conf_dir,
+    notify   => Service['syslog-ng'],
+  })
 
 }
