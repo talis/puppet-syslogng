@@ -17,6 +17,10 @@ define syslogng::network_source (
   $tcp_port            = undef,
   $tcp_max_connections = undef,
   $udp_port            = undef,
+  $tls_key_file_path   = undef,
+  $tls_cert_file_path  = undef,
+  $ca_dir              = undef,
+  $peer_verify         = undef,
 ) {
   validate_re($ensure, [ '^present', '^absent' ])
   validate_absolute_path($conf_dir)
@@ -30,5 +34,4 @@ define syslogng::network_source (
     ensure => $ensure_file,
     content => template('syslogng/syslog-ng.conf.d/source.d/syslog.conf.erb'),
   }
-  
 }
