@@ -1,0 +1,16 @@
+# Network listener for <%= @title %>
+
+source s_<%= @title %> {
+  <% if @tcp_port -%>
+  tcp(ip(<%= @source_ip -%>) 
+    port(<%= @tcp_port -%>) 
+    <% if @tcp_max_connections -%>max_connections(<%= @tcp_max_connections -%>)<% end -%> 
+    <% if @tls_key_file_path || @tls_cert_file_path -%>
+    tls(<% if @tls_key_file_path -%>key_file(<%= @tls_key_file_path -%>)<% end -%>
+        <% if @tls_cert_file_path -%>cert_file(<%= @tls_cert_file_path -%>)<% end -%>
+	<% if @ca_dir -%>ca_dir(<%= @ca_dir -%>)<% end -%>
+	<% if @peer_verify %>peer_verify(<%= @peer_verify -%>)<% end -%>)
+    <% end -%>);
+  <% end %>
+  <% if @udp_port -%>udp(ip(<%= @source_ip %>) port(<%= @udp_port %>));<% end %>
+};
